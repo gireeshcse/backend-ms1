@@ -60,12 +60,16 @@ set(function(v) {
 });
 
 
-userSchema.statics.findByUsername = function(username){
-  return this.find({username : new RegExp(username,'i')});
+userSchema.statics.findByUsername = function(username,callback){
+  return this.findOne({username : username},callback);
 }
 
-userSchema.statics.findByEmail = async function(email){
-  return await this.findOne({email : email});
+userSchema.statics.searchByUsername = function(username,callback){
+  return this.find({username : new RegExp(username,'i')},callback);
+}
+
+userSchema.statics.findByEmail = async function(email,callback){
+  return this.findOne({email : email},callback);
 }
 
 userSchema.methods.verifyPassword = function(password){
@@ -78,7 +82,25 @@ userSchema.methods.verifyPassword = function(password){
    }
 }
 
+userSchema.statics.verifyPasswordWithHash = function(password,hash){
+  if(bcrypt.compareSync(password, hash)) {
+    // Passwords match
+    return true;
+   } else {
+    // Passwords don't match
+    return false;
+   }
+}
+
 userSchema.methods.generateToken = function(){
+  return jwt.sign({ email: this.email,id:this._id,name:this.fullName }, process.env.JWT_SECRET);
+}
+
+userSchema.statics.generateTokenWithData = function(data){
+  return jwt.sign(data, process.env.JWT_SECRET);
+}
+
+userSchema.statics.generateTokenStatic = function(){
   return jwt.sign({ email: this.email,id:this._id,name:this.fullName }, process.env.JWT_SECRET);
 }
 
