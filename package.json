@@ -16,7 +16,7 @@
     "casbin": "^4.1.1",
     "cross-env": "^7.0.2",
     "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^5.9.7",
     "morgan": "^1.10.0",
     "node-env-file": "^0.1.8",
